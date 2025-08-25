@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "834291203644",
+    "project_id": "cognisync-8665b",
+    "storage_bucket": "cognisync-8665b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:834291203644:android:224d3690a3b85b4014cd39",
+        "android_client_info": {
+          "package_name": "com.cognisync.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "834291203644-qr28gv4f6m8frujj58d0r9gllcoh07o7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cognisync.app",
+            "certificate_hash": "16debc2c28dab3e54098d3338248486430d1c71c"
+          }
+        },
+        {
+          "client_id": "834291203644-0gpre0hb2a99qupfls8uhss4scocuu9n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxPT00-PhKPLmdT8DlaTHdV_XJevrplC8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "834291203644-0gpre0hb2a99qupfls8uhss4scocuu9n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
