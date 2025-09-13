@@ -3,19 +3,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'dart:ui';
 // ...existing code...
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final bool startInEditMode;
+  final VoidCallback? onClose;
+  const ProfilePage({super.key, this.startInEditMode = false, this.onClose});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool _isEditMode = false;
+  // Always in edit mode
   double? _uploadProgress;
   final _formKey = GlobalKey<FormState>();
   final _picker = ImagePicker();
@@ -62,12 +65,10 @@ class _ProfilePageState extends State<ProfilePage> {
         _hobbiesController.text = data['hobbies'] ?? '';
         _notesController.text = data['notes'] ?? '';
         _imageUrl = fetchedImageUrl ?? user.photoURL;
-        _isEditMode = false;
       });
     } else {
       setState(() {
         _imageUrl = user.photoURL;
-        _isEditMode = true;
       });
     }
   }
@@ -174,7 +175,6 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       _loading = false;
       _imageUrl = imageUrl;
-      _isEditMode = false;
       _imageFile = null;
       _uploadProgress = null;
     });
@@ -187,90 +187,50 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      backgroundColor: Colors.black,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Card(
-            color: Colors.grey[900],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
+    return Material(
+      color: Colors.transparent,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+              icon: const Icon(Icons.close, color: Colors.white, size: 28),
+              onPressed: widget.onClose,
+              tooltip: 'Close',
             ),
-            elevation: 8,
-            child: Padding(
+          ),
+          Center(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
-              child: _isEditMode ? _buildEditForm() : _buildProfileSummary(),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFF2323A7), // dark blue
+                      Color(0xFFE040FB), // pink
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(28),
+                ),
+                padding: const EdgeInsets.all(1.0),
+                child: Card(
+                  color: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  elevation: 8,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 72, 24, 24),
+                    child: _buildEditForm(),
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
+        ],
       ),
-    );
-  }
-
-  Widget _buildProfileSummary() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CircleAvatar(
-          radius: 48,
-          backgroundColor: Colors.white24,
-          backgroundImage: (_imageUrl != null && _imageUrl!.isNotEmpty)
-              ? NetworkImage(_imageUrl!)
-              : null,
-          child: (_imageUrl == null || _imageUrl!.isEmpty)
-              ? const Icon(Icons.person, size: 48, color: Colors.white54)
-              : null,
-        ),
-        const SizedBox(height: 16),
-        Text(
-          _nameController.text.isNotEmpty ? _nameController.text : 'No Name',
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
-        _profileInfoRow(Icons.email, _emailController.text),
-        _profileInfoRow(Icons.wc, _gender ?? ''),
-        _profileInfoRow(Icons.cake, _dobController.text),
-        _profileInfoRow(Icons.phone, _phoneController.text),
-        _profileInfoRow(Icons.home, _addressController.text),
-        _profileInfoRow(Icons.contact_emergency, _emergencyController.text),
-        _profileInfoRow(Icons.medical_services, _medicalController.text),
-        _profileInfoRow(Icons.info, _notesController.text),
-        _profileInfoRow(Icons.sports_handball, _hobbiesController.text),
-        const SizedBox(height: 24),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              onPressed: () => setState(() => _isEditMode = true),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.greenAccent[700],
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text(
-                'Edit',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 
@@ -286,7 +246,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: LinearProgressIndicator(
                 value: _uploadProgress,
                 backgroundColor: Colors.white10,
-                color: Colors.greenAccent[700],
+                color: const Color.fromARGB(255, 0, 197, 82),
                 minHeight: 6,
               ),
             ),
@@ -346,6 +306,12 @@ class _ProfilePageState extends State<ProfilePage> {
             keyboardType: TextInputType.emailAddress,
             validator: (v) =>
                 v == null || v.isEmpty ? 'Enter your email' : null,
+            maxLines: 1,
+            minLines: 1,
+            // The following line ensures overflow is handled
+            buildCounter:
+                (_, {required currentLength, required isFocused, maxLength}) =>
+                    null,
           ),
           const SizedBox(height: 12),
           TextFormField(
@@ -439,52 +405,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
               ),
-              ElevatedButton(
-                onPressed: _loading
-                    ? null
-                    : () => setState(() => _isEditMode = false),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[700],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _profileInfoRow(IconData icon, String value) {
-    if (value.isEmpty) return const SizedBox.shrink();
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.black54,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.white70, size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-            ),
           ),
         ],
       ),
@@ -497,7 +418,10 @@ class _ProfilePageState extends State<ProfilePage> {
       labelStyle: const TextStyle(color: Colors.white70),
       filled: true,
       fillColor: Colors.white10,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.white24),
+      ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: Colors.white24),

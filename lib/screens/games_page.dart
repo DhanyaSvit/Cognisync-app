@@ -25,50 +25,46 @@ class GamesPage extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _GameCard(
-                title: 'Stroop Test',
-                description: 'Test your focus and cognitive control.',
-                color: Colors.deepPurple,
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const StroopTestGame()),
-                ),
+        padding: const EdgeInsets.all(18.0),
+        child: GridView.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 18,
+          crossAxisSpacing: 18,
+          childAspectRatio: 1,
+          children: [
+            _GameCard(
+              title: 'Stroop Test',
+              description: 'Test your focus and cognitive control.',
+              color: Colors.deepPurple,
+              onTap: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const StroopTestGame())),
+            ),
+            _GameCard(
+              title: 'Memory Game',
+              description: 'Challenge your memory and recall.',
+              color: Colors.teal,
+              onTap: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const MemoryGame())),
+            ),
+            _GameCard(
+              title: 'Image Memory Game',
+              description: 'Memorize the images and recall their positions!',
+              color: Colors.orange,
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const ImageMemoryGame()),
               ),
-              const SizedBox(height: 32),
-              _GameCard(
-                title: 'Memory Game',
-                description: 'Challenge your memory and recall.',
-                color: Colors.teal,
-                onTap: () => Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (_) => const MemoryGame())),
-              ),
-              const SizedBox(height: 32),
-              _GameCard(
-                title: 'Image Memory Game',
-                description: 'Memorize the images and recall their positions!',
-                color: Colors.orange,
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const ImageMemoryGame()),
-                ),
-              ),
-              const SizedBox(height: 32),
-              _GameCard(
-                title: 'Merge Mosaic',
-                description:
-                    'Slide and merge tiles to reach the highest score!',
-                color: Colors.amber,
-                onTap: () => Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (_) => const MergeMosaic())),
-              ),
-              // ...other game cards...
-            ],
-          ),
+            ),
+            _GameCard(
+              title: 'Merge Mosaic',
+              description: 'Slide and merge tiles to reach the highest score!',
+              color: Colors.amber,
+              onTap: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const MergeMosaic())),
+            ),
+          ],
         ),
       ),
     );
@@ -106,25 +102,30 @@ class _GameCard extends StatelessWidget {
             ),
           ],
         ),
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.bold,
-                fontSize: 26,
-                letterSpacing: 1.2,
+        padding: const EdgeInsets.all(18),
+        child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  letterSpacing: 1.2,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              description,
-              style: const TextStyle(color: Colors.white70, fontSize: 16),
-            ),
-          ],
+              const SizedBox(height: 10),
+              Text(
+                description,
+                style: const TextStyle(color: Colors.white70, fontSize: 14),
+              ),
+            ],
+          ),
         ),
       ),
     );

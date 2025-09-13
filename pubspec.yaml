@@ -1,3 +1,4 @@
+  # (fonts section moved below under flutter:)
 name: cognisync_app
 description: "A new Flutter project."
 publish_to: 'none'
@@ -49,12 +50,17 @@ flutter:
     - assets/game_image/volcano.png
     - assets/game_image/woman1.png
     - assets/game_image/woman2.png
-    
-    - assets/video/brain-loop2.mp4
+    - assets/video/brain-loop3.mp4
+
   fonts:
     - family: GoodTimingBd
       fonts:
         - asset: assets/fonts/good timing bd.otf
-    - family: Anton
+
+    - family: Zentry
       fonts:
-        - asset: assets/fonts/Anton-Regular.ttf
+        - asset: assets/fonts/zentry-regular.woff2
+
+    - family: General
+      fonts:
+        - asset: assets/fonts/general.woff2
