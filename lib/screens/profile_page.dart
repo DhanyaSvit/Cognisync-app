@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:ui';
-// ...existing code...
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 
@@ -185,51 +184,47 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    Navigator.of(context).pushReplacementNamed('/dashboard');
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: IconButton(
-              icon: const Icon(Icons.close, color: Colors.white, size: 28),
-              onPressed: widget.onClose,
-              tooltip: 'Close',
-            ),
-          ),
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF2323A7), // dark blue
-                      Color(0xFFE040FB), // pink
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(28),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF2323A7), // dark blue
+                    Color(0xFFE040FB), // pink
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                padding: const EdgeInsets.all(1.0),
-                child: Card(
-                  color: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  elevation: 8,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 72, 24, 24),
-                    child: _buildEditForm(),
-                  ),
+                borderRadius: BorderRadius.circular(28),
+              ),
+              padding: const EdgeInsets.all(2.0), // Border thickness
+              child: Card(
+                color: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                elevation: 8,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 72, 24, 24),
+                  child: _buildEditForm(),
                 ),
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

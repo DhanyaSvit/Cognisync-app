@@ -346,6 +346,11 @@ class _ProfilePopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double popupWidth = (screenWidth * 0.85).clamp(
+      0,
+      340,
+    ); // Increase width, max 340
     return GestureDetector(
       onTap: onClose,
       child: Stack(
@@ -360,7 +365,7 @@ class _ProfilePopup extends StatelessWidget {
             child: GestureDetector(
               onTap: () {}, // Prevent tap from closing modal
               child: SizedBox(
-                width: 260,
+                width: popupWidth,
                 height: 320,
                 child: Container(
                   decoration: BoxDecoration(
@@ -448,11 +453,15 @@ class _ProfilePopup extends StatelessWidget {
                                     size: 20,
                                   ),
                                   const SizedBox(width: 8),
-                                  Text(
-                                    email,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
+                                  Flexible(
+                                    child: Text(
+                                      email,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
                                     ),
                                   ),
                                 ],
